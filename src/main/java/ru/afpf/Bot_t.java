@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,11 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import static ru.afpf.Snmp_pdu.getSnmp;
+import static ru.afpf.Bot_auth.checkUser;
+
 public class Bot_t extends TelegramLongPollingBot {
 
-    static Properties properties = new Properties();
+    static private Properties properties = new Properties();
 
-    public Bot_t() {
+    Bot_t() {
         try {
             properties.load(new FileInputStream(new File("Bot.properties")));
         } catch (IOException e) {
@@ -27,24 +31,43 @@ public class Bot_t extends TelegramLongPollingBot {
         }
     }
     public void onUpdateReceived(Update update) {
-        Message message = update.getMessage();
-        if (!update.hasMessage() || update.getMessage().getFrom().getId() != Integer.parseInt(properties.getProperty("VALID_USER")))
-            return;
-        if (message != null && message.hasText()) {
-            switch (message.getText()) {
-                case "Погреб":
-                    sendMsg(message, "Тут будет температура и влажность в погребе");
-                    System.out.println(message.getText());
-                    break;
-                case "Прихожая":
-                    sendMsg(message, "тут будет температура и влажность в прихожей");
-                    System.out.println(message.getText());
-                    break;
+        try{
+            Message message = update.getMessage();
+            boolean validUser;
+            Integer userIDD = update.getMessage().getFrom().getId();
+            System.out.println("UserIDD "+userIDD);
+            validUser = Bot_auth.checkUser(userIDD);
+            if (!validUser){
+                System.out.println("Invalid UserID");
+                return;}
+
+//            Snmp_pdu snmp_pdu = new Snmp_pdu();
+            if (message != null && message.hasText()) {
+                switch (message.getText()) {
+                    case "/start":
+                        sendMsg(message, "поехали");
+                        System.out.println(message.getText());
+                        break;
+                    case "Погреб":
+                        sendMsg(message, "Температура "+getSnmp(properties.getProperty("SNMP_PG_T"))+" оС");
+                        System.out.println(message.getText());
+                        sendMsg(message, "Влажность "+getSnmp(properties.getProperty("SNMP_PG_H"))+" %");
+                        System.out.println(message.getText());
+                        break;
+                    case "Прихожая":
+                        sendMsg(message, "Температура "+getSnmp(properties.getProperty("SNMP_PR_T"))+" оС");
+                        System.out.println(message.getText());
+                        sendMsg(message, "Влажность "+getSnmp(properties.getProperty("SNMP_PR_H"))+" %");
+                        System.out.println(message.getText());
+                        break;
+                }
             }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void sendMsg (Message message, String text) {
+    private void sendMsg (Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
 
@@ -71,7 +94,7 @@ public class Bot_t extends TelegramLongPollingBot {
         replyKeyboardMarkup.setKeyboard(keyboard);
 
         sendMessage.setChatId(message.getChatId().toString());
-        sendMessage.setReplyToMessageId(message.getMessageId());
+        //sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
         try {
             execute(sendMessage);

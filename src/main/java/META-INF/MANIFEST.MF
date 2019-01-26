@@ -14,6 +14,6 @@ Class-Path: commons-logging-1.2.jar hk2-locator-2.5.0-b32.jar jersey-m
  ar jersey-entity-filtering-2.25.1.jar hk2-api-2.5.0-b32.jar javax.ann
  otation-api-1.2.jar guice-4.1.0.jar jersey-common-2.25.1.jar aopallia
  nce-1.0.jar grizzly-http-2.3.28.jar jersey-guava-2.25.1.jar aopallian
- ce-repackaged-2.5.0-b32.jar
+ ce-repackaged-2.5.0-b32.jar snmp4j-2.5.0.jar
 Main-Class: ru.afpf.Main
 
