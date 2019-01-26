@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Class-Path: commons-logging-1.2.jar hk2-locator-2.5.0-b32.jar jersey-m
+ edia-json-jackson-2.25.1.jar jersey-server-2.25.1.jar jackson-jaxrs-j
+ son-provider-2.8.7.jar jackson-core-2.8.7.jar validation-api-1.1.0.Fi
+ nal.jar jackson-module-jaxb-annotations-2.8.7.jar commons-io-2.5.jar 
+ javax.inject-1.jar telegrambots-meta-4.1.jar javax.ws.rs-api-2.0.1.ja
+ r grizzly-framework-2.3.28.jar guava-19.0.jar telegrambots-4.1.jar ja
+ vax.inject-2.5.0-b32.jar httpcore-4.4.6.jar osgi-resource-locator-1.0
+ .1.jar jackson-jaxrs-base-2.8.7.jar commons-codec-1.9.jar javassist-3
+ .20.0-GA.jar httpclient-4.5.3.jar jersey-media-jaxb-2.25.1.jar jersey
+ -container-grizzly2-http-2.25.1.jar hk2-utils-2.5.0-b32.jar jersey-cl
+ ient-2.25.1.jar jackson-databind-2.8.7.jar json-20160810.jar httpmime
+ -4.5.3.jar jackson-annotations-2.8.0.jar grizzly-http-server-2.3.28.j
+ ar jersey-entity-filtering-2.25.1.jar hk2-api-2.5.0-b32.jar javax.ann
+ otation-api-1.2.jar guice-4.1.0.jar jersey-common-2.25.1.jar aopallia
+ nce-1.0.jar grizzly-http-2.3.28.jar jersey-guava-2.25.1.jar aopallian
+ ce-repackaged-2.5.0-b32.jar
+Main-Class: ru.afpf.Main
+
