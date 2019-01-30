@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import static ru.afpf.Snmp_pdu.getSnmp;
-import static ru.afpf.Bot_auth.checkUser;
 
 public class Bot_t extends TelegramLongPollingBot {
 
     static private Properties properties = new Properties();
+    Authable authable = new Bot_auth();
+    AnsverInterface ansverInterface = new Snmp_pdu();
 
     Bot_t() {
         try {
@@ -34,14 +34,15 @@ public class Bot_t extends TelegramLongPollingBot {
         try{
             Message message = update.getMessage();
             boolean validUser;
-            Integer userIDD = update.getMessage().getFrom().getId();
-            System.out.println("UserIDD "+userIDD);
-            validUser = Bot_auth.checkUser(userIDD);
+            Integer userID = update.getMessage().getFrom().getId();
+            System.out.println("UserIDD "+userID);
+
+            validUser = authable.checkUser(userID);
             if (!validUser){
                 System.out.println("Invalid UserID");
                 return;}
 
-//            Snmp_pdu snmp_pdu = new Snmp_pdu();
+
             if (message != null && message.hasText()) {
                 switch (message.getText()) {
                     case "/start":
@@ -49,15 +50,11 @@ public class Bot_t extends TelegramLongPollingBot {
                         System.out.println(message.getText());
                         break;
                     case "Погреб":
-                        sendMsg(message, "Температура "+getSnmp(properties.getProperty("SNMP_PG_T"))+" оС");
-                        System.out.println(message.getText());
-                        sendMsg(message, "Влажность "+getSnmp(properties.getProperty("SNMP_PG_H"))+" %");
+                        sendMsg(message, ansverInterface.getAnsver("pogreb"));
                         System.out.println(message.getText());
                         break;
                     case "Прихожая":
-                        sendMsg(message, "Температура "+getSnmp(properties.getProperty("SNMP_PR_T"))+" оС");
-                        System.out.println(message.getText());
-                        sendMsg(message, "Влажность "+getSnmp(properties.getProperty("SNMP_PR_H"))+" %");
+                        sendMsg(message, ansverInterface.getAnsver("prihojaya"));
                         System.out.println(message.getText());
                         break;
                 }

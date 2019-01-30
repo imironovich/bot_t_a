@@ -18,7 +18,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Snmp_pdu {
+public class Snmp_pdu implements AnsverInterface{
     static private Properties properties = new Properties();
 
     static {
@@ -29,30 +29,36 @@ public class Snmp_pdu {
         }
     }
 
-    private static String ipAddress = (properties.getProperty("SNMP_ADDRESS"));
+    private static String IP_ADDRESS = (properties.getProperty("SNMP_ADDRESS"));
 
-    private static String port = (properties.getProperty("SNMP_PORT"));;
+    private static String PORT = (properties.getProperty("SNMP_PORT"));;
 
-    // OID of MIB RFC 1213; Scalar Object = .iso.org.dod.internet.mgmt.mib-2.system.sysDescr.0
-    //private static String oidValue = ".1.3.6.1.4.1.318.1.1.10.3.13.1.1.3.2";  // ends with 0 for scalar object
+    private static int SNMP_VERSION = SnmpConstants.version1;
 
-    private static int snmpVersion = SnmpConstants.version1;
+    private static String COMMUNITY = (properties.getProperty("SMNP_COMMUNITY"));
 
-    private static String community = (properties.getProperty("SMNP_COMMUNITY"));
+    public String getAnsver (String question){
 
+        switch (question){
+            case "pogreb":
+                return ("Температура "+getSnmp(properties.getProperty("SNMP_PG_T"))+" оС,"+" Влажность "+getSnmp(properties.getProperty("SNMP_PG_H"))+" %");
+            case "prihojaya":
+                return ("Температура "+getSnmp(properties.getProperty("SNMP_PR_T"))+" оС,"+" Влажность "+getSnmp(properties.getProperty("SNMP_PR_H"))+" %");
+        }
+        return "Не реализовано";
+    }
 
-    public static int getSnmp(String oid) {
+    public String getSnmp(String oid) {
         try {
 
             TransportMapping transport = new DefaultUdpTransportMapping();
             transport.listen();
 
-
             // Create Target Address object
             CommunityTarget comtarget = new CommunityTarget();
-            comtarget.setCommunity(new OctetString(community));
-            comtarget.setVersion(snmpVersion);
-            comtarget.setAddress(new UdpAddress(ipAddress + "/" + port));
+            comtarget.setCommunity(new OctetString(COMMUNITY));
+            comtarget.setVersion(SNMP_VERSION);
+            comtarget.setAddress(new UdpAddress(IP_ADDRESS + "/" + PORT));
             comtarget.setRetries(2);
             comtarget.setTimeout(1000);
 
@@ -81,7 +87,7 @@ public class Snmp_pdu {
                     if (errorStatus == PDU.noError) {
                         System.out.println("Snmp Get Response = " + responsePDU.getVariableBindings());
                         String str = responsePDU.getVariableBindings().toString();
-                        return Integer.parseInt(str.substring(str.indexOf("=") + 2, str.indexOf("]")));
+                        return (str.substring(str.indexOf("=") + 2, str.indexOf("]")));
                     } else {
                         System.out.println("Error: Request Failed");
                         System.out.println("Error Status = " + errorStatus);
@@ -97,6 +103,6 @@ public class Snmp_pdu {
             snmp.close();
         } catch (IOException E) {
         }
-        return -273;
+        return "-273";
     }
 }

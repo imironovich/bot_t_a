@@ -15,12 +15,7 @@ public class Main {
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         Properties properties = new Properties();
-        Snmp_pdu snmp_pdu = null;
-        try {
-            snmp_pdu = new Snmp_pdu();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         try {
             telegramBotsApi.registerBot(new Bot_t());
             System.out.println("Ya_startovallo");

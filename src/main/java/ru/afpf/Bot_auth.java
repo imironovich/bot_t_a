@@ -1,16 +1,14 @@
 package ru.afpf;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
 
 
-public class Bot_auth {
 
-    public static boolean checkUser(Integer userID) {
+public class Bot_auth implements Authable{
+
+    public boolean checkUser(Integer userID) {
         int[] array = null;
         try (BufferedReader in = new BufferedReader(new FileReader("user.list")))
         {
