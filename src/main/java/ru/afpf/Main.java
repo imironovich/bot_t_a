@@ -16,8 +16,12 @@ public class Main {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         Properties properties = new Properties();
 
+        Authable authable = new Bot_auth();
+        AnsverInterface ansverInterface = new Snmp_pdu(properties);
+
+
         try {
-            telegramBotsApi.registerBot(new Bot_t());
+            telegramBotsApi.registerBot(new Bot_t(properties, authable, ansverInterface));
             System.out.println("Ya_startovallo");
             properties.load(new FileInputStream(new File("Bot.properties")));
         } catch (TelegramApiException e) {

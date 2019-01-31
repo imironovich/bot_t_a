@@ -6,11 +6,7 @@ import org.snmp4j.Snmp;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.smi.Integer32;
-import org.snmp4j.smi.OID;
-import org.snmp4j.smi.OctetString;
-import org.snmp4j.smi.UdpAddress;
-import org.snmp4j.smi.VariableBinding;
+import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 import java.io.File;
@@ -19,23 +15,27 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Snmp_pdu implements AnsverInterface{
-    static private Properties properties = new Properties();
+     private Properties properties;
+   Snmp_pdu(Properties properties) {
+        this.properties =  properties;
 
-    static {
         try {
             properties.load(new FileInputStream(new File("Bot.properties")));
+            IP_ADDRESS = (properties.getProperty("SNMP_ADDRESS"));
+            PORT = (properties.getProperty("SNMP_PORT"));
+            COMMUNITY = (properties.getProperty("SMNP_COMMUNITY"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static String IP_ADDRESS = (properties.getProperty("SNMP_ADDRESS"));
+    private String IP_ADDRESS;
 
-    private static String PORT = (properties.getProperty("SNMP_PORT"));;
+    private String PORT;
 
-    private static int SNMP_VERSION = SnmpConstants.version1;
+    private int SNMP_VERSION = SnmpConstants.version1;
 
-    private static String COMMUNITY = (properties.getProperty("SMNP_COMMUNITY"));
+    private String COMMUNITY;
 
     public String getAnsver (String question){
 
@@ -48,10 +48,10 @@ public class Snmp_pdu implements AnsverInterface{
         return "Не реализовано";
     }
 
-    public String getSnmp(String oid) {
+    private String getSnmp(String oid) {
         try {
 
-            TransportMapping transport = new DefaultUdpTransportMapping();
+            TransportMapping<? extends Address> transport = new DefaultUdpTransportMapping();
             transport.listen();
 
             // Create Target Address object
@@ -102,6 +102,7 @@ public class Snmp_pdu implements AnsverInterface{
             }
             snmp.close();
         } catch (IOException E) {
+            System.err.println("Error in snmp_pdu");
         }
         return "-273";
     }

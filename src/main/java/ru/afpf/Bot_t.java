@@ -19,11 +19,15 @@ import java.util.Properties;
 
 public class Bot_t extends TelegramLongPollingBot {
 
-    static private Properties properties = new Properties();
-    Authable authable = new Bot_auth();
-    AnsverInterface ansverInterface = new Snmp_pdu();
+    private Properties properties;
+    private Authable authable;
+    private AnsverInterface ansverInterface;
 
-    Bot_t() {
+    Bot_t(Properties properties, Authable authable, AnsverInterface ansverInterface) {
+        this.properties =  properties;
+        this.authable = authable;
+        this.ansverInterface = ansverInterface;
+
         try {
             properties.load(new FileInputStream(new File("Bot.properties")));
         } catch (IOException e) {
