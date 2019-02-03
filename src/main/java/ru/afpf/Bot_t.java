@@ -1,6 +1,7 @@
 package ru.afpf;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -23,13 +24,17 @@ public class Bot_t extends TelegramLongPollingBot {
     private Authable authable;
     private AnsverInterface ansverInterface;
 
-    Bot_t(Properties properties, Authable authable, AnsverInterface ansverInterface) {
+    public Bot_t(AnsverInterface ansverInterface, Authable authable, Properties properties) {
         this.properties =  properties;
         this.authable = authable;
         this.ansverInterface = ansverInterface;
 
         try {
-            properties.load(new FileInputStream(new File("Bot.properties")));
+            File file = new File("Bot.properties");
+            if (!file.exists())
+                throw new RuntimeException("No file with name:" + file.getName());
+            FileInputStream fileInputStream = new FileInputStream(file);
+            properties.load(fileInputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,8 +72,28 @@ public class Bot_t extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
+    public synchronized void answerCallbackQuery(String callbackId, String message) {
+        AnswerCallbackQuery answer = new AnswerCallbackQuery();
+        answer.setCallbackQueryId(callbackId);
+        answer.setText(message);
+        answer.setShowAlert(true);
+//        try {
+//            answerCallbackQuery(answer);
+//        } catch (TelegramApiException e) {
+//            e.printStackTrace();
+//        }
+    }
 
-    private void sendMsg (Message message, String text) {
+    public void sendMess(long chat_id, String text){
+        SendMessage sendMess = new SendMessage().setChatId(chat_id).setText(text);
+        try {
+            execute(sendMess);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
 

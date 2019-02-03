@@ -44,6 +44,8 @@ public class Snmp_pdu implements AnsverInterface{
                 return ("Температура "+getSnmp(properties.getProperty("SNMP_PG_T"))+" оС,"+" Влажность "+getSnmp(properties.getProperty("SNMP_PG_H"))+" %");
             case "prihojaya":
                 return ("Температура "+getSnmp(properties.getProperty("SNMP_PR_T"))+" оС,"+" Влажность "+getSnmp(properties.getProperty("SNMP_PR_H"))+" %");
+            case "pogrebT":
+                return (getSnmp(properties.getProperty("SNMP_PG_T")));
         }
         return "Не реализовано";
     }
