@@ -14,11 +14,14 @@ class Sheduler extends TimerTask {
     }
     public void run() {
         int intPogrebT = parseInt(ansverInterface.getAnsver("pogrebT"));
+        int intPogrebH = parseInt(ansverInterface.getAnsver("pogrebH"));
         System.out.println("pogreb "+ intPogrebT);
         if (intPogrebT <= 4) {
             bot_t.sendMess(192211047, "Низкая температура в погребе! Всего "+intPogrebT+" градуса!");
         }
-
+        if (intPogrebH >= 75){
+            bot_t.sendMess(192211047, "Высокая влажность в погребе! Аж "+intPogrebH+" % !");
+        }
     }
 
 }

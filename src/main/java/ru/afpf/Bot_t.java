@@ -72,17 +72,17 @@ public class Bot_t extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-    public synchronized void answerCallbackQuery(String callbackId, String message) {
-        AnswerCallbackQuery answer = new AnswerCallbackQuery();
-        answer.setCallbackQueryId(callbackId);
-        answer.setText(message);
-        answer.setShowAlert(true);
+//    public synchronized void answerCallbackQuery(String callbackId, String message) {
+//        AnswerCallbackQuery answer = new AnswerCallbackQuery();
+//        answer.setCallbackQueryId(callbackId);
+//        answer.setText(message);
+//        answer.setShowAlert(true);
 //        try {
 //            answerCallbackQuery(answer);
 //        } catch (TelegramApiException e) {
 //            e.printStackTrace();
 //        }
-    }
+//    }
 
     public void sendMess(long chat_id, String text){
         SendMessage sendMess = new SendMessage().setChatId(chat_id).setText(text);
